@@ -9,7 +9,7 @@ const parseMoviesResponse = (data) => {
         return {movies: groups, total}
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return {movies: [], total: 0}
     }
 }

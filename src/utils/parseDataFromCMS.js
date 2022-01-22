@@ -12,7 +12,7 @@ const parseDataFromCMS = (data) => {
         return {url, ordenamiento}
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return {url: null, ordenamiento: null}
     }
 }

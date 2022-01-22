@@ -12,7 +12,7 @@ const parseOrderOptions = (data) => {
         return orderOptions;
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return []
     }
 }
