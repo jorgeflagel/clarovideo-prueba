@@ -15,7 +15,7 @@ const initialState = {
     status: 'idle',
     movies: [],
     page: 0,
-    total: 0,
+    totalPages: null,
     error: null,
     genre: null,
     genreId: null,
@@ -32,7 +32,7 @@ export const movieListSlice = createSlice({
         },
         addMovies: (state, action) => {
             state.movies = [...state.movies, ...action.payload.movies];
-            state.total = action.payload.total;
+            state.totalPages = action.payload.totalPages;
             state.page += 1;
         },
         resetList: (state) => {
@@ -40,7 +40,7 @@ export const movieListSlice = createSlice({
             state.genre = null;
             state.genreId = null;
             state.page = 0;
-            state.total = 0;
+            state.totalPages = 0;
             state.status = 'idle';
             state.error = null;
             state.url = null;
@@ -63,10 +63,18 @@ export const { setStatus, setCmsData, addMovies, resetList, setError } = movieLi
 
 export const fetchMovieListByGenre = genre => async (dispatch, getState) => {
     let {movieList: state} = getState();
-    console.log(genre, state.genre)
-    console.log(genre === state.genre && state.status !== 'error');
-    if (genre === state.genre && state.status !== 'error') return null;
-    if (state.status !== 'idle') dispatch(resetList());
+    if(state.status === 'loading') return;
+
+    let page = state.page;
+    let totalPages = state.totalPages;
+
+    if (state.status === 'error' || genre !== state.genre) {
+        dispatch(resetList())
+        page = 0;
+        totalPages = null;
+    };
+
+    if(totalPages && page === totalPages) return;
 
     dispatch(setStatus('loading'));
 
@@ -76,9 +84,13 @@ export const fetchMovieListByGenre = genre => async (dispatch, getState) => {
         const genreId = getGenreIdFromUrl(url);
         const parsedOrderOptions = parseOrderOptions(ordenamiento);
         dispatch(setCmsData({url, ordenamiento: parsedOrderOptions, genreId, genre}))
-        const movieListResponse = await getMovieListByGenreId(genreId);
-        const movieList = parseMovieListResponse(movieListResponse);
-        dispatch(addMovies({...movieList}));
+
+        const options = {from: page * 50 || 0};
+        const movieListResponse = await getMovieListByGenreId(genreId, options);
+        const {total, movies} = parseMovieListResponse(movieListResponse);
+        
+        dispatch(addMovies({movies, totalPages: Math.ceil(total / 50)}));
+        dispatch(setStatus('complete'));
     } catch(err) {
         console.error(err);
         dispatch(setError(err.statusText))
