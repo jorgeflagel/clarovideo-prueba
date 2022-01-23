@@ -9,7 +9,6 @@ import {
 import './App.css';
 
 // PAGES
-import CategoriesMenu from './pages/CategoriesMenu';
 import Movie from './pages/Movie';
 import MovieList from './pages/MovieList';
 import NotFound from './pages/NotFound';
@@ -26,7 +25,7 @@ function App() {
         <h1>CLARO VIDEO APP</h1>
         <BrowserRouter>
           <Routes>
-            <Route path="/mexico" element={<CategoriesMenu />} >
+            <Route path="/mexico" >
               <Route index element={<Welcome />} />
               <Route path=":genre/:movieId" element={<Movie />} />
               <Route exact path=":genre" element={<MovieList />}/>

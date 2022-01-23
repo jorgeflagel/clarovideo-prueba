@@ -1,6 +1,11 @@
+import CategoriesMenu from "../components/CategoriesMenu";
+
 function Welcome() {
     return(
-        <h1>WELCOME TO CLARO VIDEO</h1>
+        <>
+            <CategoriesMenu />
+            <h1>WELCOME TO CLARO VIDEO MEXICO</h1>
+        </>
     )
 }
 

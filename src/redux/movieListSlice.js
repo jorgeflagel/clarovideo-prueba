@@ -36,10 +36,19 @@ export const movieListSlice = createSlice({
             state.page += 1;
         },
         resetList: (state) => {
-            state = initialState;
+            state.movies = [...initialState.movies];
+            state.genre = null;
+            state.genreId = null;
+            state.page = 0;
+            state.total = 0;
+            state.status = 'idle';
+            state.error = null;
+            state.url = null;
+            state.ordenamiento = null;
         },
         setCmsData: (state, action) => {
             state.ordenamiento = action.payload.ordenamiento;
+            state.genre = action.payload.genre;
             state.genreId = action.payload.genreId;
             state.url = action.payload.ordenamiento;
         },
@@ -52,8 +61,11 @@ export const movieListSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setStatus, setCmsData, addMovies, resetList, setError } = movieListSlice.actions;
 
-export const fetchMovieListByGenre = genre => async (dispatch, state) => {
-    if (genre === state.genre && state.status !== 'error') return
+export const fetchMovieListByGenre = genre => async (dispatch, getState) => {
+    let {movieList: state} = getState();
+    console.log(genre, state.genre)
+    console.log(genre === state.genre && state.status !== 'error');
+    if (genre === state.genre && state.status !== 'error') return null;
     if (state.status !== 'idle') dispatch(resetList());
 
     dispatch(setStatus('loading'));
@@ -63,7 +75,7 @@ export const fetchMovieListByGenre = genre => async (dispatch, state) => {
         const {url, ordenamiento} = parseDataFromCMS(data);
         const genreId = getGenreIdFromUrl(url);
         const parsedOrderOptions = parseOrderOptions(ordenamiento);
-        dispatch(setCmsData({url, ordenamiento: parsedOrderOptions, genreId}))
+        dispatch(setCmsData({url, ordenamiento: parsedOrderOptions, genreId, genre}))
         const movieListResponse = await getMovieListByGenreId(genreId);
         const movieList = parseMovieListResponse(movieListResponse);
         dispatch(addMovies({...movieList}));
