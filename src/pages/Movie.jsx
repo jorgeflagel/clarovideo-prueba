@@ -1,28 +1,16 @@
-import { getRoles } from "@testing-library/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-
-// UTILS
-
-// SERVICES
-import getMovieById from '../services/getMovieById'
-import parseMovieResponse from "../utils/parseMovieResponse";
+import { fetchMovieById, useMovie } from "../redux/movieSlice";
 
 function Movie() {
+    const { movie } = useMovie();
     let {movieId, genre} = useParams();
-    const [movie, setMovie] = useState(null)
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        (async function(){
-            try {
-                const data = await getMovieById(movieId);
-                const parsedMovie = parseMovieResponse(data)
-                setMovie(parsedMovie);
-            } catch (err) {
-                console.error(err);
-            }
-        })()
-    }, [movieId])
+        dispatch(fetchMovieById(movieId))
+    }, [movieId, dispatch])
 
     if(!movie) {
         return null
@@ -41,14 +29,14 @@ function Movie() {
             <h3>RANKING</h3>
             <p>{JSON.stringify(movie.ranking)}</p>
             <h3>GENRES</h3>
-            <ul>{movie.genres.map(genre => <li>{genre.desc}</li>)}</ul>
+            <ul>{movie.genres.map(genre => <li key={genre.id}>{genre.desc}</li>)}</ul>
             {movie.roles.map(role => (
-                <>
+                <div key={role.id}>
                     <h4>{role.desc}</h4>
                     <ul>
-                    {role.talents.talent.map(talent => <li>{talent.fullname}</li>)}
+                    {role.talents.talent.map(talent => <li key={talent.id}>{talent.fullname}</li>)}
                     </ul>
-                </>)
+                </div>)
             )}
             <h3>ORIGINAL TITLE</h3>
             <p>{movie.media.originaltitle}</p>

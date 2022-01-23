@@ -1,48 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
-
-// SERVICES
-import getDataFromCMS from '../services/getDataFromCMS';
-import getMovieListByGenreId from '../services/getMovieListByGenreId';
-
-// UTILS
-import getGenreIdFromUrl from '../utils/getGenreIdFromUrl';
-import parseDataFromCMS from '../utils/parseDataFromCMS';
-import parseMovieListResponse from '../utils/parseMovieListResponse';
-import parseOrderOptions from '../utils/parseOrderOptions';
-
+import { fetchMovieListByGenre, useMovieList } from "../redux/movieListSlice";
 
 function MovieList() {
-    let {genre} = useParams();
-    const [orderOptions, setOrderOptions] = useState(null)
-    const [movieList, setMovieList] = useState(null);
-
+    let { genre } = useParams();
+    const movieList = useMovieList();
+    const { ordenamiento, movies } = movieList;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        (async function(){
-            try {
-                const data = await getDataFromCMS(genre);
-                const {url, ordenamiento} = parseDataFromCMS(data);
-                const genreId = getGenreIdFromUrl(url);
-                const parsedOrderOptions = parseOrderOptions(ordenamiento);
-                setOrderOptions(parsedOrderOptions);
-                const movieListResponse = await getMovieListByGenreId(genreId);
-                const movieList = parseMovieListResponse(movieListResponse);
-                setMovieList(movieList);
-            } catch(err) {
-                console.error(err)
-            }
-        })()        
-    }, [genre])
+        dispatch(fetchMovieListByGenre(genre));
+    }, [genre, dispatch])
+
+        if(!movies || movies.length === 0) return null;
 
     return(
         <div>
             <Link to='/mexico'>Go Back</Link>
             <h1>MOVIES LIST FROM: {genre}</h1>
             <h2>ORDER OPTIONS</h2>
-            <p>{orderOptions && JSON.stringify(orderOptions)}</p>
+            <ul>{ordenamiento?.map(option => <li key={option.label}>{`${option.label}: ${option.order_id} - ${option.order_way}`}</li>)}
+            </ul>
             <h2>MOVIE LIST</h2>
-            <p>{movieList && JSON.stringify(movieList)}</p>
+            {movies && movies.map(movie => 
+                <img key={movie.id} src={movie.image_large} srcSet={`${movie.image_small}, ${movie.image_medium} 400w, ${movie.image_large} 800w`} alt={movie.title}/>
+            )}
         </div>
     )
 }

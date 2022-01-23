@@ -1,6 +1,6 @@
 function Welcome() {
     return(
-        <h1>WELCOME</h1>
+        <h1>WELCOME TO CLARO VIDEO</h1>
     )
 }
 
