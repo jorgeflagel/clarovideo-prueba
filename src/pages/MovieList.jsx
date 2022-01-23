@@ -3,19 +3,19 @@ import { useParams, Link } from "react-router-dom";
 
 // SERVICES
 import getDataFromCMS from '../services/getDataFromCMS';
-import getMoviesDataByGenreId from '../services/getMoviesDataByGenreId';
+import getMovieListByGenreId from '../services/getMovieListByGenreId';
 
 // UTILS
 import getGenreIdFromUrl from '../utils/getGenreIdFromUrl';
 import parseDataFromCMS from '../utils/parseDataFromCMS';
-import parseMoviesResponse from '../utils/parseMoviesResponse';
+import parseMovieListResponse from '../utils/parseMovieListResponse';
 import parseOrderOptions from '../utils/parseOrderOptions';
 
 
-function MoviesList() {
+function MovieList() {
     let {genre} = useParams();
     const [orderOptions, setOrderOptions] = useState(null)
-    const [movies, setMovies] = useState(null);
+    const [movieList, setMovieList] = useState(null);
 
 
     useEffect(() => {
@@ -26,9 +26,9 @@ function MoviesList() {
                 const genreId = getGenreIdFromUrl(url);
                 const parsedOrderOptions = parseOrderOptions(ordenamiento);
                 setOrderOptions(parsedOrderOptions);
-                const moviesResponse = await getMoviesDataByGenreId(genreId);
-                const movies = parseMoviesResponse(moviesResponse);
-                setMovies(movies);
+                const movieListResponse = await getMovieListByGenreId(genreId);
+                const movieList = parseMovieListResponse(movieListResponse);
+                setMovieList(movieList);
             } catch(err) {
                 console.error(err)
             }
@@ -41,10 +41,10 @@ function MoviesList() {
             <h1>MOVIES LIST FROM: {genre}</h1>
             <h2>ORDER OPTIONS</h2>
             <p>{orderOptions && JSON.stringify(orderOptions)}</p>
-            <h2>MOVIES</h2>
-            <p>{movies && JSON.stringify(movies)}</p>
+            <h2>MOVIE LIST</h2>
+            <p>{movieList && JSON.stringify(movieList)}</p>
         </div>
     )
 }
 
-export default MoviesList;
+export default MovieList;
