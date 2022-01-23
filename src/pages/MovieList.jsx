@@ -7,14 +7,16 @@ import { fetchMovieListByGenre, useMovieList } from "../redux/movieListSlice";
 function MovieList() {
     let { genre } = useParams();
     const movieList = useMovieList();
-    const { ordenamiento, movies, totalPages, page, status } = movieList;
+    const { ordenamiento, movies, status, genre: previousGenre } = movieList;
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
     const handleClick = movieId => navigate(`/mexico/${genre}/${movieId}`);
 
     useEffect(() => {
-        dispatch(fetchMovieListByGenre(genre));
+        if(previousGenre !== genre) {
+            dispatch(fetchMovieListByGenre(genre));
+        }
         const infiniteScroll = () => {
             if (window.innerHeight + document.documentElement.scrollTop + 10 >= document.documentElement.offsetHeight){
 
@@ -23,9 +25,7 @@ function MovieList() {
         }
         window.addEventListener('scroll', infiniteScroll);
         return () => window.removeEventListener('scroll', infiniteScroll)
-    }, [genre, dispatch])    
-
-    if(!movies || movies.length === 0) return null;
+    }, [genre, dispatch, previousGenre])    
 
     return(
         <>
