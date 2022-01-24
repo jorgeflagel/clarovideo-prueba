@@ -22,13 +22,21 @@
     color: #ffffff;
     text-decoration: none;
     background-color:rgb(77, 77, 77)
-  };
+}
+
+.activeStyle, .inactiveStyle {
+    padding: 6px;
+}
+
 
 .clarovideo {
+    width: 100px;
     align-self: flex-start;
+    padding-bottom: 15px;
 }
 
 .logoContainer {
+    gap: 20px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -52,20 +60,33 @@
 }
 
 .burgerIcon {
-    display: inline;
+    display: block;
     cursor: pointer;
+    font-size: 30px;
 }
 
 .closed {
     display: none;
 }
 
-.clarovideo {
-    width: 100px;
+.search {
+    display: none;
+}
+
+.search2 {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.burgerContainer {
+    min-width: 60px;
+    flex-shrink: 0;
 }
 
 
-@media screen and (min-width: 500px) {
+
+@media screen and (min-width: 700px) {
     .menu { 
         position: relative;
         flex-direction: row;
@@ -105,7 +126,14 @@
 
     .clarovideo {
         width: 200px;
+        padding-bottom: 15px;
     }
-    
+    .search {
+        display: inline-block;
+        min-width: 400px;
+    }
+    .search2 {
+        display: none;
+    }
 }
 

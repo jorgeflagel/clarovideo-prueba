@@ -23,11 +23,10 @@ const genres = [
     {genre: 'gen_terror', label: 'Terror y Suspenso'},
 ]
 
-function CategoriesMenu() {
+function CategoriesMenu({ search, setSearch }) {
     const [open, setOpen] = useState(false);
     const [translate, setTranslate] = useState(0);
-    const navigation = useRef(null)
-
+    const navigation = useRef(null);
 
     const handleClickMenu = () => {
         setOpen(previous => !previous)
@@ -44,28 +43,32 @@ function CategoriesMenu() {
             setTranslate(previousValue => previousValue - 120)
     }
 
+    const handleChangeSearch = (e) => {
+        setSearch(e.target.value)
+    }
+
     return(
         <header className={styles.header}>
             <MdNavigateBefore size='2em' className={styles.iconNavigationBack} onClick={handleClickBefore}/>
             <nav className={styles.container}>
                 <div className={styles.logoContainer}>
                     <img className={styles.clarovideo} 
-                        // width="200px" 
+                        width='100px'
                         src="/clarovideo.svg" 
                         alt="claro video"
-                        // srcSet={`${movie.image_small}, ${movie.image_medium} 400w, ${movie.image_large} 800w`} 
-
                     />
+                    <input className={styles.search} placeholder='Filter movies...' type='text' value={search} onChange={handleChangeSearch}/>
                     {open 
-                        ? <MdClose size="2em" onClick={handleClickMenu} className={styles.burgerIcon }/>  
-                        : <MdMenu size="2em" onClick={handleClickMenu} className={styles.burgerIcon }/>}
+                        ? <MdClose onClick={handleClickMenu} className={styles.burgerIcon }/>
+                        : <MdMenu onClick={handleClickMenu} className={styles.burgerIcon }/>}
                 </div>
+                <input className={styles.search2} placeholder='Filter movies...' type='text' value={search} onChange={handleChangeSearch}/>
                 <ul className={`${styles.menu} ${!open ? styles.closed : undefined}`} style={{transform: `translateX(${translate}px)`}} ref={navigation}>
                     {genres.map(genre => 
                             <NavLink 
                                 key={genre.genre}
                                 onClick={() => setOpen(false)}
-                                className={({ isActive }) => isActive ? styles.activeStyle  : undefined}
+                                className={({ isActive }) => isActive ? styles.activeStyle  : styles.inactiveStyle}
                                 to={`/mexico/${genre.genre}`}
                                 style={{flexShrink: 0}}>
                                 <li className={styles.menuItem}>
