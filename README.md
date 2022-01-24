@@ -1,4 +1,4 @@
-# TEST CLAROVIDEO
+# CLAROVIDEO TEST
 
 This project was build with React(create-react-app) and Redux(redux-toolkit).
 
