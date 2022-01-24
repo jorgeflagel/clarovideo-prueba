@@ -22,7 +22,6 @@ function App() {
   return (
     <Provider store={store}>
       <div className="App">
-        <h1>CLARO VIDEO APP</h1>
         <BrowserRouter>
           <Routes>
             <Route path="/mexico" >

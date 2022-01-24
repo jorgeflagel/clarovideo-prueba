@@ -1,4 +1,7 @@
 import { NavLink } from "react-router-dom";
+import styles from './CategoriesMenu.module.css';
+import { MdNavigateBefore, MdNavigateNext, MdMenu, MdClose } from 'react-icons/md';
+import { useState, useRef } from "react";
 
 const genres = [
     {genre: 'gen_accion', label: 'Acción y Aventura'},
@@ -21,28 +24,58 @@ const genres = [
 ]
 
 function CategoriesMenu() {
+    const [open, setOpen] = useState(false);
+    const [translate, setTranslate] = useState(0);
+    const navigation = useRef(null)
 
-    let activeStyle = {
-        textDecoration: "underline"
-      };
 
-    let inactiveStyle = {
-        textDecoration: "none",
-        color: "black"
+    const handleClickMenu = () => {
+        setOpen(previous => !previous)
+    }
+
+    const handleClickBefore = () => {
+        if(translate < 0){
+            setTranslate(previousValue => previousValue + 120)
+        }
+    }
+
+    const handleClickNext = () => {
+        if(navigation.current.scrollWidth - document.body.getBoundingClientRect().width > -translate )
+            setTranslate(previousValue => previousValue - 120)
     }
 
     return(
-        <header>
-            <nav>
-                <ul>
+        <header className={styles.header}>
+            <MdNavigateBefore size='2em' className={styles.iconNavigationBack} onClick={handleClickBefore}/>
+            <nav className={styles.container}>
+                <div className={styles.logoContainer}>
+                    <img className={styles.clarovideo} 
+                        // width="200px" 
+                        src="/clarovideo.svg" 
+                        alt="claro video"
+                        // srcSet={`${movie.image_small}, ${movie.image_medium} 400w, ${movie.image_large} 800w`} 
+
+                    />
+                    {open 
+                        ? <MdClose size="2em" onClick={handleClickMenu} className={styles.burgerIcon }/>  
+                        : <MdMenu size="2em" onClick={handleClickMenu} className={styles.burgerIcon }/>}
+                </div>
+                <ul className={`${styles.menu} ${!open ? styles.closed : undefined}`} style={{transform: `translateX(${translate}px)`}} ref={navigation}>
                     {genres.map(genre => 
-                        <li key={genre.genre}>
                             <NavLink 
-                                style={({ isActive }) => isActive ? activeStyle  : inactiveStyle}
-                                to={`/mexico/${genre.genre}`}>{genre.label}</NavLink>
-                        </li>)}
+                                key={genre.genre}
+                                onClick={() => setOpen(false)}
+                                className={({ isActive }) => isActive ? styles.activeStyle  : undefined}
+                                to={`/mexico/${genre.genre}`}
+                                style={{flexShrink: 0}}>
+                                <li className={styles.menuItem}>
+                                    {genre.label}
+                                </li>
+                            </NavLink>  
+                       )}
                 </ul>
             </nav>
+            <MdNavigateNext size='2em' className={styles.iconNavigationAfter} onClick={handleClickNext}/>
         </header>
     )
 }
