@@ -57,6 +57,7 @@
     background-color: rgb(177, 177, 177);
     top: 100%;
     left: 0;
+    z-index: 1000;
 }
 
 .burgerIcon {

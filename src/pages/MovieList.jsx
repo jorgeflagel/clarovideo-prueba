@@ -47,7 +47,7 @@ function MovieList() {
                         <li key={option.label}>{`${option.label}: ${option.order_id} - ${option.order_way}`}</li>)}
                     </ul> */}
                     {filteredMovies && filteredMovies.map(movie => 
-                        <img onClick={() => handleClick(movie.id)} 
+                        <img className={styles.image} onClick={() => handleClick(movie.id)} 
                             key={movie.id} 
                             src={movie.image_large} 
                             srcSet={`${movie.image_small}, ${movie.image_medium} 400w, ${movie.image_large} 800w`} 

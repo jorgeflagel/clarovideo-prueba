@@ -5,3 +5,13 @@
     align-items: center;
     justify-content: center;
 }
+
+.image {
+    cursor: pointer;
+    opacity: 80%;
+    margin: 5px;
+}
+
+.image:hover {
+    opacity: 100%;   
+}

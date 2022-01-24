@@ -17,7 +17,14 @@ function Movie() {
     }, [movieId, dispatch])
 
     if(status === 'loading') {
-        return <div className={styles.loadingContainer}><Loading /></div>
+        return (
+            <>
+                <div className={styles.buttonContainer}>
+                    <CustomButton onClick={() => navigate(`/mexico/${genre}`)}>Go Back</CustomButton>
+                </div>
+                <div className={styles.loadingContainer}><Loading /></div>
+            </>
+        )
     }
 
     return(
