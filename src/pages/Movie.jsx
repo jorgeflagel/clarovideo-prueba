@@ -16,6 +16,8 @@ function Movie() {
         dispatch(fetchMovieById(movieId))
     }, [movieId, dispatch])
 
+    if(!movie) return null;
+
     if(status === 'loading') {
         return (
             <>
